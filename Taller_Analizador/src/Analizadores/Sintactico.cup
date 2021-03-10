@@ -1,0 +1,161 @@
+//******************************************************************************
+//**                       Declarar paquete                                   **
+//******************************************************************************
+package Analizadores;
+
+//******************************************************************************
+//**                       Importar librerías                                 **
+//******************************************************************************
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+//PARSER - Sintaxis de JAVA
+parser code
+{:
+    public LinkedList<Error> erroresSintacticos = new LinkedList<Error>();
+
+    public void syntax_error(Symbol s){
+        System.out.println("Error R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            Error esR = new Error(s.value.toString(), s.left + 1, s.right + 1, "Error Sintactico Recuperable", "error");
+            erroresSintacticos.add(esR);
+        } catch (Exception ex) {
+            Error esR = new Error("null", s.left + 1, s.right + 1, "Error Sintactico Recuperable", "error");
+            erroresSintacticos.add(esR);
+        }
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error NR de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            Error esNR = new Error(s.value.toString(), s.left + 1, s.right + 1, "Error Sintactico No Recuperable", "error");
+            erroresSintacticos.add(esNR);
+        } catch (Exception ex) {
+            Error esNR = new Error("null", s.left + 1, s.right + 1, "Error Sintactico No Recuperable", "error");
+            erroresSintacticos.add(esNR);
+        }
+    }
+:}
+
+//ACTION CODE - - Sintaxis de JAVA
+action code
+{:
+    int suma(int operando1, int operando2){
+        return operando1 + operando2;
+    }
+
+    int resta(int operando1, int operando2){
+        int resultado = operando1 - operando2;
+        System.out.println(operando1 + " - " + operando2 + " = " + resultado);
+        return resultado;
+    }
+
+    int multiplicacion(int operando1, int operando2){
+        int resultado = operando1 * operando2;
+        System.out.println(operando1 + " * " + operando2 + " = " + resultado);
+        return resultado;
+    } 
+:}
+
+
+//******************************************************************************
+//**                     Seccion de terminales                                **
+//******************************************************************************
+terminal mas, menos, por, dividido, pow, mod, abrir_par, cerrar_par;
+terminal String numero;
+
+//******************************************************************************
+//**                     Seccion de no terminales                             **
+//******************************************************************************
+nonterminal Integer S,OPERACION,A,B,C,D;
+
+//******************************************************************************
+//**                       Inicio con:                                        **
+//******************************************************************************
+start with S;
+
+//******************************************************************************
+//**                            Reglas                                        **
+//******************************************************************************
+S::= OPERACION:a
+    {:
+        System.out.print("***   El resultado de la operacion es ");
+        System.out.println(a + "   ***");
+        RESULT = a;
+    :}
+;
+OPERACION::= A:a
+            {:
+                RESULT = a;
+            :}
+;
+
+A::=    A:a mas B:b
+        {:
+            int resultado = suma(a,b);
+            System.out.println(a + " + " + b + " = " + resultado);
+            RESULT = resultado;
+        :}
+    |   A:a menos B:b
+        {:
+            RESULT = resta(a,b);
+        :}
+    |   B:a
+        {:
+            RESULT = a;
+        :}
+    |   error numero:a 
+        {:
+            RESULT = Integer.parseInt(a);
+        :}
+;
+
+B::=    B:a por C:b
+        {:
+            RESULT = multiplicacion(a,b);
+        :}
+    |   B:a dividido C:b
+        {:
+            int resultado = a / b;
+            System.out.println(a + " / " + b + " = " + resultado);
+            RESULT = resultado;
+        :}
+    |   B:a mod C:b
+        {:
+            int resultado = a % b;
+            System.out.println(a + " % " + b + " = " + resultado);
+            RESULT = resultado;
+        :}
+    |   C:a
+        {:
+            RESULT = a;
+        :}
+;
+
+C::=    C:a pow D:b
+        {:
+            int resultado = (int) Math.pow(a,b) ;
+            System.out.println(a + " ^ " + b + " = " + resultado);
+            RESULT = resultado;
+        :}
+    |   D:a
+        {:
+            RESULT = a;
+            
+        :}
+;
+
+D::=    abrir_par OPERACION:a cerrar_par
+        {:
+            RESULT = a;
+            
+        :}
+    |   numero:a 
+        {:
+            RESULT = Integer.parseInt(a);
+            
+        :}
+;
+
+
+

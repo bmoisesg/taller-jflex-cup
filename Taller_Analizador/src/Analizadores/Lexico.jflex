@@ -14,7 +14,7 @@ import java.util.LinkedList;
 //-------> Directivas
 %public 
 %class ALexico
-%cupsym Simbolos
+%cupsym sym
 %cup
 %char
 %column
@@ -29,28 +29,34 @@ numero= [0-9]+
 %%
 
 /*------------  3ra Area: Reglas Lexicas ---------*/
-//-------------> Simbolos
+//-------------> sym
 <YYINITIAL> "+"         {
-                        return new Symbol(Simbolos.mas, yycolumn, yyline, yytext());
+                        return new Symbol(sym.mas, yycolumn, yyline, yytext());
                         }
 <YYINITIAL> "-"         {
-                        return new Symbol(Simbolos.menos, yycolumn, yyline, yytext());
+                        return new Symbol(sym.menos, yycolumn, yyline, yytext());
                         }
 <YYINITIAL> "*"         {
-                        return new Symbol(Simbolos.por, yycolumn, yyline, yytext());
+                        return new Symbol(sym.por, yycolumn, yyline, yytext());
+                        }
+<YYINITIAL> "/"         {
+                        return new Symbol(sym.dividido, yycolumn, yyline, yytext());
+                        }
+<YYINITIAL> "^"         {
+                        return new Symbol(sym.pow, yycolumn, yyline, yytext());
                         }
 <YYINITIAL> "%"         {
-                        return new Symbol(Simbolos.pow, yycolumn, yyline, yytext());
+                        return new Symbol(sym.mod, yycolumn, yyline, yytext());
                         }
 <YYINITIAL> "("         {
-                        return new Symbol(Simbolos.abrir_par, yycolumn, yyline, yytext());
+                        return new Symbol(sym.abrir_par, yycolumn, yyline, yytext());
                         }       
 <YYINITIAL> ")"         {
-                        return new Symbol(Simbolos.cerrar_par, yycolumn, yyline, yytext());
+                        return new Symbol(sym.cerrar_par, yycolumn, yyline, yytext());
                         }   
-//------>Simbolos ER                                             
+//------>sym ER                                             
 <YYINITIAL> {numero}    {
-                        return new Symbol(Simbolos.numero, yycolumn, yyline, yytext());
+                        return new Symbol(sym.numero, yycolumn, yyline, yytext());
                         }
 
 //------> Espacios
