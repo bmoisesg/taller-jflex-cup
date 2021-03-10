@@ -26,11 +26,10 @@ import java.util.LinkedList;
 
 //------> ER de palabras reservadas
 numero= [0-9]+
-
+%%
 
 /*------------  3ra Area: Reglas Lexicas ---------*/
 //-------------> Simbolos
-
 <YYINITIAL> "+"         {
                         return new Symbol(Simbolos.mas, yycolumn, yyline, yytext());
                         }
