@@ -1,0 +1,201 @@
+
+//******************************************************************************
+//**                       Declarar paquete                                   **
+//******************************************************************************
+package Analizadores;
+
+//******************************************************************************
+//**                       Importar librerías                                 **
+//******************************************************************************
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+//PARSER - Sintaxis de JAVA
+parser code
+{:
+    public LinkedList<TError> erroresSintacticos = new LinkedList<TError>();
+    public String resultado ="";
+
+    public void syntax_error(Symbol s){
+        System.out.println("Error R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            TError esR = new TError(s.value.toString(), s.left + 1, s.right + 1, "Error Sintactico Recuperable", "error");
+            erroresSintacticos.add(esR);
+        } catch (Exception ex) {
+            TError esR = new TError("null", s.left + 1, s.right + 1, "Error Sintactico Recuperable", "error");
+            erroresSintacticos.add(esR);
+        }
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error NR de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            TError esNR = new TError(s.value.toString(), s.left + 1, s.right + 1, "Error Sintactico No Recuperable", "error");
+            erroresSintacticos.add(esNR);
+        } catch (Exception ex) { 
+            TError esNR = new TError("null", s.left + 1, s.right + 1, "Error Sintactico No Recuperable", "error");
+            erroresSintacticos.add(esNR);
+        }
+    }
+:}
+
+//ACTION CODE - - Sintaxis de JAVA
+action code
+{:
+        String suma(Object operando1, Object operando2){
+
+        if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")   
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+           TError esNR = new TError(operando1.toString() +"+"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+           erroresSintacticos.add(esNR);
+           return "error";
+        }
+        
+        int resultado= Integer.valueOf(operando1.toString())+Integer.valueOf(operando2.toString());
+        System.out.println(operando1 + " + " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    }
+
+    String resta(Object operando1, Object operando2){
+
+        if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")  
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+           TError esNR = new TError(operando1.toString() +"-"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+            erroresSintacticos.add(esNR);           
+            return "error";
+        }
+        int resultado= Integer.valueOf(operando1.toString())-Integer.valueOf(operando2.toString());
+        System.out.println(operando1 + " - " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    }
+
+    String multiplicacion(Object operando1, Object operando2){
+    
+       if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")  
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+           TError esNR = new TError(operando1.toString() +"*"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+           erroresSintacticos.add(esNR);
+           return "error";
+        }
+
+        int resultado= Integer.valueOf(operando1.toString())*Integer.valueOf(operando2.toString());
+        System.out.println(operando1 + " * " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    } 
+    String division(Object operando1, Object operando2){
+
+        if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")  
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+            TError esNR = new TError(operando1.toString() +"/"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+            erroresSintacticos.add(esNR);
+           return "error";
+        }
+        if(operando2.equals("0")){
+           TError esNR = new TError(operando1.toString() +"/"+ operando2.toString(),0,0, "Error Semantico", "no es posible una division en 0");
+           erroresSintacticos.add(esNR);
+           return "error";
+        }
+
+
+
+        int resultado= Integer.valueOf(operando1.toString())/Integer.valueOf(operando2.toString());
+        System.out.println(operando1 + " / " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    } 
+    String potencia(Object operando1, Object operando2){
+
+        if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")  
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+           TError esNR = new TError(operando1.toString() +"^"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+           erroresSintacticos.add(esNR);
+           return "error";
+        }
+
+       
+
+        int resultado = (int)Math.pow(Integer.valueOf(operando1.toString()) , Integer.valueOf(operando2.toString()));
+        System.out.println(operando1 + " * " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    } 
+    String modulo(Object operando1, Object operando2){
+
+        if(operando1.equals("false") || operando2.equals("false")   //preguntar si son boolenaos
+        || operando1.equals("true")  || operando2.equals("true")  
+        || operando2.equals("error") || operando1.equals("error")  //preguntar si son errores
+        ){
+            TError esNR = new TError(operando1.toString() +"%"+ operando2.toString(),0,0, "Error Semantico", "tipos no compatibles");
+            erroresSintacticos.add(esNR);
+           return "error";
+        }
+
+       int resultado= Integer.valueOf(operando1.toString())%Integer.valueOf(operando2.toString());
+        System.out.println(operando1 + " & " + operando2 + " = " + resultado);
+        return String.valueOf(resultado);
+    } 
+:}
+
+
+//******************************************************************************
+//**                     Seccion de terminales                                **
+//******************************************************************************
+terminal mas, menos, por, dividido, pow, mod, abrir_par, cerrar_par;
+terminal numero, rtrue,rfalse;
+
+//******************************************************************************
+//**                     Seccion de no terminales                             **
+//******************************************************************************
+nonterminal S,OPERACION,A,B,C,D;
+
+
+//******************************************************************************
+//**                       Inicio con:                                        **
+//******************************************************************************
+start with S;
+
+//******************************************************************************
+//**                            Reglas                                        **
+//******************************************************************************
+
+
+S::= OPERACION:a
+    {:
+        System.out.println("***   El resultado de la operacion es "+ a+"   ***");
+        resultado=a.toString();
+        RESULT = a;
+    :};
+
+OPERACION::= A:a         {:  RESULT = a;                   :};
+
+A::=    A:a mas B:b      {:  RESULT = suma(a,b);           :}
+    |   A:a menos B:b    {:  RESULT = resta(a,b);          :}
+    |   B:a              {:  RESULT = a;                   :}
+    |   error numero:a   {:  RESULT = a;                   :};
+
+
+B::=    B:a por C:b      {:  RESULT = multiplicacion(a,b); :}
+    |   B:a dividido C:b {:  RESULT = division(a,b);       :}
+    |   B:a mod C:b      {:  RESULT = modulo(a,b);         :}
+    |   C:a              {:  RESULT = a;                   :};
+
+
+C::= C:a pow D:b         {:  RESULT = potencia(a,b);       :}
+    |D:a                 {:  RESULT = a;                   :};
+
+
+D::=    abrir_par OPERACION:a cerrar_par {: RESULT = a;    :}
+    |   rtrue:a                          {: RESULT = a;    :}
+    |   rfalse:a                         {: RESULT = a;    :}
+    |   numero:a                         {: RESULT = a;    :};
+
+
+

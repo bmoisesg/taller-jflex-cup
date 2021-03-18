@@ -1,3 +1,4 @@
+
 /*------------  1ra Area: Codigo de Usuario ---------*/
 //------> Paquetes,importaciones
 package Analizadores;
@@ -8,7 +9,7 @@ import java.util.LinkedList;
 %{
     //----> Codigo de usuario en sintaxis java
     //Crearemos una linkedlist para ir guardando los errores léxicos
-    public static LinkedList<Error> TablaEL = new LinkedList<Error>();
+    public static LinkedList<TError> TablaEL = new LinkedList<TError>();
 %}
 
 //-------> Directivas
@@ -29,7 +30,19 @@ numero= [0-9]+
 %%
 
 /*------------  3ra Area: Reglas Lexicas ---------*/
-//-------------> sym
+
+// otra forma de usarlo <YYINITIAL>{ contenido }
+
+<YYINITIAL> "true"      {
+                        return new Symbol(sym.rtrue, yycolumn, yyline, yytext());
+                        }
+<YYINITIAL> "false"     {
+                        return new Symbol(sym.rfalse, yycolumn, yyline, yytext());
+                        }
+
+
+
+
 <YYINITIAL> "+"         {
                         return new Symbol(sym.mas, yycolumn, yyline, yytext());
                         }
@@ -65,9 +78,9 @@ numero= [0-9]+
 
 //------> Errores Lexicos
 .                       { 
-                            System.out.println("----------Error Léxico "+yytext()+"--------------");
-                            System.out.println("Linea: "+ yyline + "  Columna:  "+ yycolumn);
-                            Error datos = new Error(yytext(), yyline, yycolumn, "Error Léxico", "Simbolo no existe en el lenguaje");
+                            //System.out.println("----------Error Léxico "+yytext()+"--------------");
+                            //System.out.println("Linea: "+ yyline + "  Columna:  "+ yycolumn);
+                            TError datos = new TError(yytext(), yyline, yycolumn, "Error Léxico", "Simbolo no existe en el lenguaje");
                             TablaEL.add(datos);
 }
                         

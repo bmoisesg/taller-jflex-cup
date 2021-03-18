@@ -1,3 +1,0 @@
-java -jar ../../lib/jflex-full-1.7.0.jar Lexico.jflex 
-
-java -jar ../../lib/java-cup-11b.jar -parser Parser -symbols sym Sintactico.cup 
