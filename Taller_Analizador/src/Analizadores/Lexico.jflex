@@ -69,5 +69,5 @@ numero= [0-9]+
                             System.out.println("Linea: "+ yyline + "  Columna:  "+ yycolumn);
                             Error datos = new Error(yytext(), yyline, yycolumn, "Error Léxico", "Simbolo no existe en el lenguaje");
                             TablaEL.add(datos);
-                        }
+}
                         
